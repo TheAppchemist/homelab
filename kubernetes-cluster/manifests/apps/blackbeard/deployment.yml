@@ -1,0 +1,137 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blackbeard
+  namespace: media
+spec:
+  selector:
+    matchLabels:
+      app: blackbeard
+  template:
+    metadata:
+      labels:
+        app: blackbeard
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      initContainers:
+      - name: init-radarr
+        image: busybox
+        command: ["sh", "-c", "cp /radarr-temp/config.xml /config/config.xml && chmod -R 777 /config"]
+        volumeMounts:
+        - name: radarr-config-volume
+          mountPath: /radarr-temp
+        - name: storage-volume
+          subPath: radarr/config
+          mountPath: /config
+      - name: init-prowlarr
+        image: busybox
+        command: ["sh", "-c", "cp /prowlarr-temp/config.xml /config/config.xml && chmod -R 777 /config"]
+        volumeMounts:
+        - name: prowlarr-config-volume
+          mountPath: /prowlarr-temp
+        - name: storage-volume
+          subPath: prowlarr/config
+          mountPath: /config
+      - name: init-sonarr
+        image: busybox
+        command: ["sh", "-c", "cp /sonarr-temp/config.xml /config/config.xml && chmod -R 777 /config"]
+        volumeMounts:
+        - name: sonarr-config-volume
+          mountPath: /sonarr-temp
+        - name: storage-volume
+          subPath: sonarr/config
+          mountPath: /config
+      containers:
+      - name: radarr
+        image: lscr.io/linuxserver/radarr:latest
+        env:
+          - name: TZ
+            value: Africa/Johannesburg
+        # resources:
+        #   limits:
+        #     memory: 400Mi
+        #     cpu: "0.3"
+        ports:
+        - containerPort: 7878
+          name: http
+        volumeMounts:
+        - mountPath: '/config'
+          name: storage-volume
+          subPath: radarr/config
+        - mountPath: '/media-drive'
+          name: streaming-volume
+      - name: prowlarr
+        image: lscr.io/linuxserver/prowlarr:latest
+        env:
+          - name: TZ
+            value: Africa/Johannesburg
+        # resources:
+        #   limits:
+        #     memory: 400Mi
+        #     cpu: "0.3"
+        ports:
+        - containerPort: 9696
+          name: http
+        volumeMounts:
+        - mountPath: '/config'
+          name: storage-volume
+          subPath: prowlarr/config
+      - name: sonarr
+        image: lscr.io/linuxserver/sonarr:latest
+        env:
+          - name: TZ
+            value: Africa/Johannesburg
+        # resources:
+        #   limits:
+        #     memory: 400Mi
+        #     cpu: "0.3"
+        ports:
+        - containerPort: 8686
+          name: http
+        volumeMounts:
+        - mountPath: '/config'
+          name: storage-volume
+          subPath: sonarr/config
+        - mountPath: '/media-drive'
+          name: streaming-volume
+      - name: sabnzbd
+        image: lscr.io/linuxserver/sabnzbd:latest
+        env:
+          - name: TZ
+            value: Africa/Johannesburg
+        # resources:
+        #   limits:
+        #     memory: 400Mi
+        #     cpu: "0.3"
+        ports:
+        - containerPort: 8080
+          name: http
+        volumeMounts:
+        - mountPath: '/config'
+          name: storage-volume
+          subPath: sabnzbd/config
+        - mountPath: '/media-drive'
+          name: streaming-volume
+          # subPath: blackbeard/sabnzbd/data/downloads
+        # - mountPath: '/incomplete-downloads'
+        #   name: streaming-volume
+        #   subPath: blackbeard/sabnzbd/data/incomplete-downloads
+      volumes:
+        - name: radarr-config-volume
+          configMap:
+            name: blackbeard-radarr-config
+        - name: prowlarr-config-volume
+          configMap:
+            name: blackbeard-prowlarr-config
+        - name: sonarr-config-volume
+          configMap:
+            name: blackbeard-sonarr-config
+        - name: streaming-volume
+          nfs:
+            server: 192.168.68.111
+            path: /streaming
+            readOnly: false
+        - name: storage-volume
+          persistentVolumeClaim:
+            claimName: media-pvc

@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: duplicacy
+  namespace: tools
+spec:
+  selector:
+    matchLabels:
+      app: duplicacy
+  template:
+    metadata:
+      labels:
+        app: duplicacy
+    spec:
+      initContainers:
+      - name: init-duplicacy
+        image: busybox
+        command: ["sh", "-c", "mkdir -p /root/.duplicacy-web && cp /duplicacy-temp/settings.json /root/.duplicacy-web/settings.json && chmod -R 777 /root/.duplicacy-web"]
+        volumeMounts:
+        - name: duplicacy-config-volume
+          mountPath: /duplicacy-temp
+        - name: storage-volume
+          subPath: duplicacy/
+          mountPath: /root/.duplicacy-web
+      hostname: backups
+      containers:
+      - name: duplicacy
+        image: homelabhq/duplicacy:1.0.2
+        env:
+          - name: TZ
+            value: Africa/Johannesburg
+        resources:
+          limits:
+            memory: "500Mi"
+            cpu: "0.01"
+        ports:
+        - containerPort: 3675
+          name: http
+        volumeMounts:
+        - mountPath: '/storage'
+          name: storage-volume
+          subPath: duplicacy/storage
+        - mountPath: '/root/.duplicacy-web'
+          name: storage-volume
+          subPath: duplicacy
+        - mountPath: '/database'
+          name: database-volume
+        - mountPath: '/clustor-storage'
+          name: cluster-volume
+        - mountPath: '/backup-storage'
+          name: backup-volume
+      volumes:
+        - name: storage-volume
+          persistentVolumeClaim:
+            claimName: tools-pvc
+        - name: duplicacy-config-volume
+          configMap:
+            name: duplicacy-config
+        - name: database-volume
+          nfs:
+            server: 192.168.68.111
+            path: /database
+            readOnly: true
+        - name: cluster-volume
+          nfs:
+            server: 192.168.68.111
+            path: /clustor-storage
+            readOnly: true
+        - name: backup-volume
+          nfs:
+            server: 192.168.68.111
+            path: /backups
+            readOnly: true

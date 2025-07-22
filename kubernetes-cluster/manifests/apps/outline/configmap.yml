@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: outline
+  namespace: tools
+data:
+  NODE_ENV: production
+  URL: https://outline.appchemy.co.za
+  COLLABORATION_URL: ""
+  REDIS_URL: redis://outline.tools.svc.cluster.local:6379
+  PORT: "3000"
+  SMTP_FROM_EMAIL: noreply@homelabhq.net
+  SMTP_SECURE: "false"
+  SMTP_TLS_CIPHERS: TLSv1.2
+  FILE_STORAGE_LOCAL_ROOT_DIR: /var/lib/outline/data
+  FILE_STORAGE_UPLOAD_MAX_SIZE: "262144000"
+  FILE_STORAGE: local
+  PGSSLMODE: disable

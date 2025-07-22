@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dns
+  labels:
+    name: dns
+    purpose: dns-services
+    managed-by: k0s-homelab
+  annotations:
+    description: "Namespace for DNS services and network infrastructure"
+    created-by: "homelab-admin"

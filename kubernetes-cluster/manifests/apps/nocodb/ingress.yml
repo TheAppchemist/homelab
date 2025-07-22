@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nocodb
+  namespace: tools
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.org/websocket-services: "nocodb"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - nocodb.appchemy.co.za
+    secretName: nocodb-tls
+  rules:
+  - host: nocodb.appchemy.co.za
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nocodb
+            port:
+              number: 80
+---

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: outline-redis
+  namespace: tools
+spec:
+  selector:
+    app: outline-redis
+  ports:
+  - port: 6379
+    targetPort: 6379

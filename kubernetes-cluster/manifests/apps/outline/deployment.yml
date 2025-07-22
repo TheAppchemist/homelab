@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: outline
+  namespace: tools
+spec:
+  selector:
+    matchLabels:
+      app: outline
+  template:
+    metadata:
+      labels:
+        app: outline
+    spec:
+      containers:
+      - name: outline-redis
+        image: redis
+        ports:
+        - containerPort: 6379
+      - name: outline
+        envFrom:
+        - configMapRef:
+            name: outline
+        - secretRef:
+            name: outline
+        image: docker.getoutline.com/outlinewiki/outline:latest
+        env:
+          - name: TZ
+            value: Africa/Johannesburg
+        ports:
+        - containerPort: 3000
+          name: http
+        volumeMounts:
+        - mountPath: '/data'
+          name: storage-volume
+          subPath: outline/var/lib/outline/data
+      volumes:
+        - name: config
+          configMap:
+            name: outline
+        - name: storage-volume
+          persistentVolumeClaim:
+            claimName: tools-pvc

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: duplicacy-config
+  namespace: tools
+data:
+  settings.json: |
+    {
+      "listening_address": "0.0.0.0:3675"
+    }
+

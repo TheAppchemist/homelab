@@ -1,0 +1,33 @@
+# ansible/playbook.yml
+- hosts: kubernetes_nodes
+  remote_user: root
+  name: Prepare Kubernetes Cluster Nodes
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+    
+    - name: Install required packages
+      apt:
+        name:
+          - curl
+          - nfs-common
+        state: present
+
+    - name: Create kubelet pods directory
+      file:
+        path: /var/lib/kubelet/pods
+        state: directory
+        mode: '0755'
+        owner: root
+        group: root
+    
+    - name: Create kubelet plugins registry directory
+      file:
+        path: /var/lib/kubelet/plugins_registry
+        state: directory
+        mode: '0755'
+        owner: root
+        group: root

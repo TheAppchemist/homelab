@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: blackbeard
+  namespace: media
+spec:
+  selector:
+    app: blackbeard
+  ports:
+  - port: 9696
+    name: prowlarr
+    targetPort: 9696
+  - port: 8686
+    targetPort: 8686
+    name: sonarr
+  - port: 7878
+    targetPort: 7878
+    name: radarr
+  - port: 8080
+    targetPort: 8080
+    name: sabnzbd

@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blackbeard-sonarr-config
+  namespace: media
+data:
+  config.xml: |
+    <Config>
+      <BindAddress>*</BindAddress>
+      <Port>8686</Port>
+      <SslPort>6969</SslPort>
+      <EnableSsl>False</EnableSsl>
+      <LaunchBrowser>True</LaunchBrowser>
+      <ApiKey>fcc3bb6675e54c9987ab38e8998a277e</ApiKey>
+      <AuthenticationMethod>External</AuthenticationMethod>
+      <AuthenticationRequired>Enabled</AuthenticationRequired>
+      <Branch>master</Branch>
+      <LogLevel>info</LogLevel>
+      <SslCertPath></SslCertPath>
+      <SslCertPassword></SslCertPassword>
+      <UrlBase></UrlBase>
+      <InstanceName>Prowlarr</InstanceName>
+      <UpdateMechanism>Docker</UpdateMechanism>
+      <PostgresUser>sonarr</PostgresUser>
+      <PostgresPassword>7WTpD8A7nNGcDLwa</PostgresPassword>
+      <PostgresPort>5432</PostgresPort>
+      <PostgresHost>192.168.68.111</PostgresHost>
+      <PostgresMainDb>sonarr</PostgresMainDb>
+      <PostgresLogDb>sonarr-logs</PostgresLogDb>
+    </Config>

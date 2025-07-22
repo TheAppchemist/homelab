@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyseerr
+  namespace: media
+spec:
+  selector:
+    matchLabels:
+      app: jellyseerr
+  template:
+    metadata:
+      labels:
+        app: jellyseerr
+    spec:
+      containers:
+      - name: jellyseerr
+        image: fallenbagel/jellyseerr:latest
+        envFrom:
+        - secretRef:
+            name: jellyseerr
+        - configMapRef:
+            name: jellyseerr
+        ports:
+        - containerPort: 5055
+          name: http
+        volumeMounts:
+        - mountPath: '/app/config'
+          name: storage-volume
+          subPath: jellyseerr/app3/config
+      volumes:
+        - name: storage-volume
+          persistentVolumeClaim:
+            claimName: media-pvc

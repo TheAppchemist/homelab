@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media
+spec:
+  capacity:
+    storage: 30Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 192.168.68.111
+    path: /k0s-storage/media
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: media-nfs
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-pvc
+  namespace: media
+spec:
+  storageClassName: media-nfs
+  accessModes:
+  - ReadWriteMany
+  resources:
+     requests:
+       storage: 30Gi

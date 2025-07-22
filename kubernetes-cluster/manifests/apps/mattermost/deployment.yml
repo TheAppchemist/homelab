@@ -1,0 +1,40 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mattermost
+  namespace: communication
+spec:
+  selector:
+    matchLabels:
+      app: mattermost
+  template:
+    metadata:
+      labels:
+        app: mattermost
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      containers:
+      - name: mattermost
+        image: mattermost/mattermost-enterprise-edition:latest
+        envFrom:
+          - secretRef:
+              name: comms
+          - configMapRef:
+              name: comms
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "0.5"
+        ports:
+        - containerPort: 8065
+          name: http
+        volumeMounts:
+        - mountPath: '/var/www/html/storage'
+          name: storage-volume
+          subPath: mattermost/var/www/html/storage
+      volumes:
+        - name: storage-volume
+          persistentVolumeClaim:
+            claimName: communication-pvc

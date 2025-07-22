@@ -1,0 +1,12 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: cluster-nfs
+provisioner: nfs.csi.k8s.io
+parameters:
+  server: 192.168.68.111
+  share: /clustor-storage
+reclaimPolicy: Retain
+mountOptions:
+  - nfsvers=4.0
+volumeBindingMode: Immediate

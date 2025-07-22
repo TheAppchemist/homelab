@@ -1,0 +1,82 @@
+apiVersion: k0sctl.k0sproject.io/v1beta1
+kind: Cluster
+metadata:
+  name: k0s-cluster
+  user: admin
+spec:
+  hosts:
+  - ssh:
+      address: 192.168.68.40
+      user: root
+      port: 22
+      keyPath: ~/.ssh/id_ed25519
+    role: controller
+  - ssh:
+      address: 192.168.68.41
+      user: root
+      port: 22
+      keyPath: ~/.ssh/id_ed25519
+    role: controller
+  - ssh:
+      address: 192.168.68.42
+      user: root
+      port: 22
+      keyPath: ~/.ssh/id_ed25519
+    role: controller
+  - ssh:
+      address: 192.168.68.43
+      user: root
+      port: 22
+      keyPath: ~/.ssh/id_ed25519
+    role: worker
+  - ssh:
+      address: 192.168.68.44
+      user: root
+      port: 22
+      keyPath: ~/.ssh/id_ed25519
+    role: worker
+  - ssh:
+      address: 192.168.68.45
+      user: root
+      port: 22
+      keyPath: ~/.ssh/id_ed25519
+    role: worker
+  - ssh:
+      address: 192.168.68.46
+      user: root
+      port: 22
+      keyPath: ~/.ssh/id_ed25519
+    role: worker
+  - ssh:
+      address: 192.168.68.47
+      user: root
+      port: 22
+      keyPath: ~/.ssh/id_ed25519
+    role: controller
+  - ssh:
+      address: 192.168.68.48
+      user: root
+      port: 22
+      keyPath: ~/.ssh/id_ed25519
+    role: controller
+  options:
+    wait:
+      enabled: true
+    drain:
+      enabled: true
+      gracePeriod: 2m0s
+      timeout: 5m0s
+      force: true
+      ignoreDaemonSets: true
+      deleteEmptyDirData: true
+      podSelector: ""
+      skipWaitForDeleteTimeout: 0s
+    concurrency:
+      limit: 30
+      workerDisruptionPercent: 10
+      uploads: 5
+    evictTaint:
+      enabled: false
+      taint: k0sctl.k0sproject.io/evict=true
+      effect: NoExecute
+      controllerWorkers: false

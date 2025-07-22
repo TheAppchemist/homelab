@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jellyseerr
+  namespace: media
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.org/websocket-services: "jellyseerr"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - jellyseerr.appchemy.co.za
+    secretName: jellyseerr-tls
+  rules:
+  - host: jellyseerr.appchemy.co.za
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jellyseerr
+            port:
+              number: 80
+---
+
+
+
+
+# curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --disable=traefik --flannel-backend=host-gw --tls-san=192.168.68.108 --bind-address=192.168.68.108 --advertise-address=192.168.68.108 --node-ip=192.168.68.108 -—token=K10a1040edc168dc2995c8cbcd25e3b8298cdddb01867f47d0b6dd197aea4aa0a46::server:ccab4104ea52be96cf42b2da145bef32 --cluster-init" sh -s -

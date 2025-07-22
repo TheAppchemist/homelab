@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blackbeard-radarr-config
+  namespace: media
+data:
+  config.xml: |
+    <Config>
+      <BindAddress>*</BindAddress>
+      <Port>7878</Port>
+      <SslPort>9898</SslPort>
+      <EnableSsl>False</EnableSsl>
+      <LaunchBrowser>True</LaunchBrowser>
+      <ApiKey>3dd2ffe3f3f740a5900926eff4fc1a01</ApiKey>
+      <AuthenticationMethod>External</AuthenticationMethod>
+      <AuthenticationRequired>Enabled</AuthenticationRequired>
+      <Branch>master</Branch>
+      <LogLevel>info</LogLevel>
+      <SslCertPath></SslCertPath>
+      <SslCertPassword></SslCertPassword>
+      <UrlBase></UrlBase>
+      <InstanceName>Radarr</InstanceName>
+      <UpdateMechanism>Docker</UpdateMechanism>
+      <PostgresUser>radarr</PostgresUser>
+      <PostgresPassword>RAqVTWS8f9qdgW</PostgresPassword>
+      <PostgresPort>5432</PostgresPort>
+      <PostgresHost>192.168.68.111</PostgresHost>
+      <PostgresMainDb>radarr</PostgresMainDb>
+      <PostgresLogDb>radarr-logs</PostgresLogDb>
+    </Config>

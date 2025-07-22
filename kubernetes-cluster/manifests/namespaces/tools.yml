@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tools
+  labels:
+    name: tools
+    purpose: development-tools
+    managed-by: k0s-homelab
+  annotations:
+    description: "Namespace for development and operational tools"
+    created-by: "homelab-admin"

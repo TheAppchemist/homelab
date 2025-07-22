@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: media
+  labels:
+    name: media
+    purpose: media-streaming
+    managed-by: k0s-homelab
+  annotations:
+    description: "Namespace for media streaming and entertainment services"
+    created-by: "homelab-admin"

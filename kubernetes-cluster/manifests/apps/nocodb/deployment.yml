@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nocodb
+  namespace: tools
+spec:
+  selector:
+    matchLabels:
+      app: nocodb
+  template:
+    metadata:
+      labels:
+        app: nocodb
+    spec:
+      containers:
+      - name: nocodb
+        envFrom:
+        - secretRef:
+            name: nocodb
+        image: nocodb/nocodb:latest
+        env:
+          - name: TZ
+            value: Africa/Johannesburg
+        ports:
+        - containerPort: 8080
+          name: http
+        volumeMounts:
+        - mountPath: '/usr/app/data'
+          name: storage-volume
+          subPath: nocodb/data
+      volumes:
+      - name: storage-volume
+        persistentVolumeClaim:
+          claimName: tools-pvc
