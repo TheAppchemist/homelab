@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vaultwarden
+  namespace: tools
+  labels:
+    app: vaultwarden
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vaultwarden
+  template:
+    metadata:
+      labels:
+        app: vaultwarden
+    spec:
+      containers:
+      - name: vaultwarden
+        image: vaultwarden/server
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: vaultwarden
+              key: vaultwarden-database-url
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: '/data'
+          name: storage-volume
+          subPath: 'vaultwarden/data'
+      volumes:
+      - name: storage-volume
+        persistentVolumeClaim:
+          claimName: tools-pvc
