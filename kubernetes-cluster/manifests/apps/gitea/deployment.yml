@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea
+  namespace: tools
+  labels:
+    app: gitea
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitea
+  template:
+    metadata:
+      labels:
+        app: gitea
+    spec:
+      containers:
+      - name: gitea
+        image: gitea/gitea:1.21.5
+        env:
+        - name: GITEA__database__USER
+          valueFrom:
+            secretKeyRef:
+              name: gitea
+              key: gitea-database-user
+        - name: GITEA__database__PASSWD
+          valueFrom:
+            secretKeyRef:
+              name: gitea
+              key: gitea-database-password
+        - name: GITEA__database__DB_TYPE
+          valueFrom:
+            configMapKeyRef:
+              name: gitea
+              key: gitea-database-type
+        - name: GITEA__database__HOST
+          valueFrom:
+            configMapKeyRef:
+              name: gitea
+              key: gitea-database-host
+        - name: GITEA__database__NAME
+          valueFrom:
+            configMapKeyRef:
+              name: gitea
+              key: gitea-database-name
+        ports:
+        - containerPort: 3000
+        - containerPort: 2222
+        volumeMounts:
+        - mountPath: '/etc/timezone'
+          name: storage-volume
+          subPath: 'gitea/etc/timezone'
+        - mountPath: '/etc/localtime'
+          name: storage-volume
+          subPath: 'gitea/etc/localtime'
+        - mountPath: '/data'
+          name: storage-volume
+          subPath: 'gitea/data'
+      volumes:
+      - name: storage-volume
+        persistentVolumeClaim:
+          claimName: tools-pvc
+      

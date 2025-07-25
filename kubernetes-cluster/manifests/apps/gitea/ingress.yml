@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gitea
+  namespace: tools
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.org/client-max-body-size: "1024M"
+    nginx.ingress.kubernetes.io/proxy-body-size: "1024M"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - git.appchemy.co.za
+    secretName: gitea-tls
+  rules:
+  - host: git.appchemy.co.za
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: gitea
+            port:
+              number: 80
+---

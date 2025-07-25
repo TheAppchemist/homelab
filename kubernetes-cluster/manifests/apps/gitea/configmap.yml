@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gitea
+  namespace: tools
+data:
+  gitea-database-type: postgres
+  gitea-database-host: "192.168.68.111:5432"
+  gitea-database-name: gitea
