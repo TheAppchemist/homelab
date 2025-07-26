@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plane-rabbitmq
+  namespace: plane-ce
+  labels:
+    app: plane-rabbitmq
+    component: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plane-rabbitmq
+  template:
+    metadata:
+      labels:
+        app: plane-rabbitmq
+        component: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:3.12-management-alpine
+        ports:
+        - containerPort: 5672
+          name: amqp
+        - containerPort: 15672
+          name: management
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: plane
+        - name: RABBITMQ_DEFAULT_PASS
+          value: plane

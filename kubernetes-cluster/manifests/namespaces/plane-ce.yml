@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: plane-ce
+  labels:
+    name: plane-ce
+    purpose: project-collaboration
+    managed-by: k0s-homelab
+  annotations:
+    description: "Namespace for Plane CE, a self-hosted communication platform"
+    created-by: "homelab-admin"

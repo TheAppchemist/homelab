@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextcloud
+  namespace: media
+spec:
+  selector:
+    matchLabels:
+      app: nextcloud
+  template:
+    metadata:
+      labels:
+        app: nextcloud
+    spec:
+      containers:
+      - name: nextcloud
+        envFrom:
+        - secretRef:
+            name: nextcloud
+        - secretRef:
+            name: nextcloud
+        image: nextcloud:latest
+        env:
+          - name: TZ
+            value: Africa/Johannesburg
+          - name: OBJECTSTORE_S3_HOST
+            valueFrom:
+              secretKeyRef:
+                name: nextcloud-r2
+                key: host
+          - name: OBJECTSTORE_S3_KEY
+            valueFrom:
+              secretKeyRef:
+                name: nextcloud-r2
+                key: key
+          - name: OBJECTSTORE_S3_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: nextcloud-r2
+                key: secret
+          - name: OBJECTSTORE_S3_BUCKET
+            value: nextcloud
+          - name: OBJECTSTORE_S3_REGION
+            value: auto
+          - name: OBJECTSTORE_S3_PORT
+            value: "443"
+        ports:
+        - containerPort: 80
+          name: http
+        volumeMounts:
+        - mountPath: '/var/www/html'
+          name: storage-volume
+          subPath: nextcloud/html
+      volumes:
+      - name: storage-volume
+        persistentVolumeClaim:
+          claimName: media-pvc
