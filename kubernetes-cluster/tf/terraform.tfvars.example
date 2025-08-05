@@ -1,0 +1,31 @@
+proxmox_server_a = {
+  url = "http://192.168.68.65:8006/api2/json"
+  user = "root@pam"
+    password = "password123"
+}
+
+proxmox_server_b = {
+  url = "http://192.168.68.113:8006/api2/json"
+  user = "root@pam"
+    password = "password123"
+}
+
+vm_template = "debian12-cloudinit"
+
+worker_vm_cpu = 2
+worker_vm_disk_size = "40G"
+worker_vm_memory = 8196
+
+controller_vm_cpu = 2
+controller_vm_disk_size = "40G"
+controller_vm_memory = 2048
+
+vm_network = {
+    name   = "eth0"
+    bridge = "vmbr0"
+    gw     = "192.168.68.1"
+}
+
+vm_password = "password123"
+
+ssh_public_key = "my public key"
